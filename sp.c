@@ -30,7 +30,7 @@ struct sparse_matrix
 void
 main ()
 {
-  printf("Press 1 if you want to enter your matrix and check whether its sparse or not\n");
+  printf("Press 1 if you want to enter your matrix and check whether its sparse or not, 0 otherwise\n");
   int b;
   scanf("%d",&b);
   if(b)
