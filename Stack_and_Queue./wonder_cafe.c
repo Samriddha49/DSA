@@ -8,13 +8,13 @@ int top = -1; // Stack top pointer
 
 int front = -1, rear = -1; // Queue front and rear pointers
 
-// Function prototypes for stack operations
+
 int isEmptyStack(int*);
 int isFullStack(int*);
 void push(int*,int data);
 int pop(int*);
 
-// Function prototypes for queue operations
+
 int isEmptyQueue();
 int isFullQueue();
 void enqueue(int data);
@@ -92,12 +92,11 @@ int pop(int *stk) {
 
 // Queue functions
 int isEmptyQueue() {
-    return front == -1 || front > rear; // Handle empty and full queue conditions
+    return front == -1 || front > rear; 
 }
 
 int isFullQueue() {
-    return (rear + 1) % MAX_SIZE == front; // Circular queue logic
-}
+    return (rear + 1) % MAX_SIZE == front; 
 
 void enqueue(int data) {
     if (isFullQueue()) {
@@ -118,7 +117,7 @@ int dequeue() {
     }
     int data = q[front];
     if (front == rear) {
-        front = rear = -1; // Reset queue if only one element
+        front = rear = -1; 
     } else {
         front = (front + 1) % MAX_SIZE;
     }
