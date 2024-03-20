@@ -1,100 +1,144 @@
-#include <stdio.h>
-#include <stdlib.h>
-#include <unistd.h>
-#include<stdbool.h>
-#include<string.h>
-typedef struct Node {
-    char* data;
-    struct Node *next;
-} Node;
-
-typedef struct {
-    Node *front, *rear;
-} Queue;
-
-void initQueue(Queue *q);
-int isEmptyQueue(Queue *q);
-void enqueue(Queue *q, char* data);
-char* dequeue(Queue *q);
-
-// Follow the given steps to solve the problem:
-
-// Create an empty queue of strings 
-// Enqueue the first binary number “1” to the queue. 
-// Now run a loop for generating and printing n binary numbers. 
-// Dequeue and Print the front of queue. 
-// Append “0” at the end of front item and enqueue it. 
-// Append “1” at the end of front item and enqueue it.
-void main()
+#include<stdio.h>
+#include<stdlib.h>
+int no_vertices;
+struct node
 {
-    Queue Q;
-    initQueue(&Q);
-    char* item="1";
-    enqueue(&Q,item);
-    printf("Enqueuing first item\n");
-    //printf("%s",dequeue(&Q));
-    int n;
-    scanf("%d",&n);
-    int i=1;
-    //char* tmp=malloc(i*sizeof(char));
-    while(n--)
-    {
-       char* tmp=dequeue(&Q);
-       char* tmp_=tmp;
-       //printf("%s\n",tmp);
-    //    int j=0;
-    //    while(tmp[j]!='\0')
-    //    printf("%c",tmp[j++]);
-    //    printf("\n");
-       puts(tmp);
-    //    tmp=realloc(tmp,(i++)*(sizeof(char)));
-    //    tmp[i-1]='0';
-       strcat(tmp,"0");
-       enqueue(&Q,tmp);
-       printf("0 enqueued\n");
-       strcat(tmp_,"1");
-       //tmp[i-1]='1';
-       enqueue(&Q,tmp_);
-       printf("1 enqueued\n");
-    }
-}
-void initQueue(Queue *q) {
-    q->front = q->rear = NULL;
-}
-
-int isEmptyQueue(Queue *q) {
-    return q->front == NULL;
-}
-
-void enqueue(Queue *q, char* data) {
-    
-    Node *newNode = (Node *)malloc(sizeof(Node));
-    newNode->data = data;
-    newNode->next = NULL;
-
-    if (isEmptyQueue(q)) {
-        q->front = q->rear = newNode;
-    } else {
-        q->rear->next = newNode;
-        q->rear = newNode;
-    }
-}
-
-
-char* dequeue(Queue *q) 
+	int data;
+	struct node *next;
+};
+void readgraph(struct node *ad[]);
+void printgraph(struct node *ad[]);
+void bfs(struct node *ad[],int start,int visited[]);
+void dfs(struct node *ad[],int start,int visited[]);
+int main()
 {
-    if (isEmptyQueue(q))
-    {
-        printf("Queue underflow\n");
-        return; 
-    }
-   char* data = q->front->data;
-   Node *temp = q->front;
-   q->front = q->front->next;
-   if (q->front == NULL)
-    {
-        q->rear = NULL;
-    }
-   free(temp);
-   return data;
+	int i,j,k,ch,start;
+	printf("Enter the total numbe of vertex :");
+	scanf("%d",&no_vertices);
+	int visited[no_vertices];
+	struct node *adj[no_vertices];
+	for(i=0;i<no_vertices;i++)
+	{
+		adj[i] = NULL;
+	}
+	readgraph(adj);
+
+	do{
+		printf("\n Enter 1 for BFS\n Enter 2 for DFS\n Enter 3 to Print the adjacency list\nEnter 4 to Exit : ");
+		scanf("%d",&ch);
+		switch(ch)
+		{
+			case 1: 
+				printf("Enter the vertex from which do you wanted to start :");
+				scanf("%d",&start);
+				for(int k=0;k<no_vertices;k++)
+					visited[k]=0;
+				bfs(adj,start,visited); break;
+			
+			case 2: 
+				printf("Enter the vertex from which do you wanted to start :");
+				scanf("%d",&start);
+				for(int k=0;k<no_vertices;k++)
+					visited[k]=0;
+
+				printf("DFS : ");
+				dfs(adj,start,visited); 
+				break;
+
+			case 3: printgraph(adj);break;
+
+			case 4: break;
+		}
+	}while(ch!= 4);
+	
+
+
+
+	return 0;
+}
+void readgraph(struct node *ad[])
+{
+	struct node *newnode;
+	int i,j,k,data;
+
+	for(i=0;i<no_vertices;i++)
+	{
+		struct node *last =NULL;
+		printf("\nEnter the Number of neighbours of %d  :",i);
+		scanf("%d",&k);
+
+		for(j=0;j<k;j++)
+		{
+			printf("Enter the value of %d neighbour of %d : ",j,i);
+			scanf("%d",&data);
+
+			newnode = (struct node*)malloc(sizeof(struct node*));
+			newnode->data = data;
+			newnode->next = NULL;
+			if(ad[i]==NULL)
+			{
+				ad[i] = newnode;
+			}
+			else
+				last->next = newnode;
+
+			last = newnode;
+		}
+	}
+}
+void printgraph(struct node *ad[])
+{
+	struct node *ptr  = NULL;
+	int i,j;
+	for(i=0;i<no_vertices;i++)
+	{
+		ptr = ad[i];
+		printf("\n The neighbour of %d are :",i);
+		while(ptr != NULL)
+		{
+			printf("%d\t",ptr->data);
+			ptr = ptr->next;
+		}
+	}
+}
+void bfs(struct node *ad[],int start,int visited[])
+{
+	int queue[no_vertices],front=-1,rear=-1;
+
+	
+	printf("BFS : ");
+	queue[++rear] = start;
+	visited[start]=1;
+	front++;
+	while(front<=rear)
+	{
+		printf("%d\t",queue[front]);
+		struct node *ptr;
+		ptr =  ad[queue[front++]];
+		while(ptr != NULL)
+		{
+			if(visited[ptr->data]!=1)
+			{
+				queue[++rear] = ptr->data;
+				visited[ptr->data] =1;
+			}
+			ptr = ptr->next;
+		}
+
+	}
+
+}
+void dfs(struct node *ad[],int start, int visited[])
+{
+
+	visited[start] = 1;
+	printf("%d\t",start);
+	struct node *ptr;
+	ptr = ad[start];
+	while(ptr!=NULL)
+	{
+		if(visited[ptr->data]==0)
+			dfs(ad,ptr->data,visited);
+		ptr = ptr->next;
+	}
 }
